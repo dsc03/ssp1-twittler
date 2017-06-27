@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="jquery.js"></script>
+    <script src="data_generator.js"></script>
+  <style type="text/css">
+
+  body {
+    background-color : #0084b4;
+  }
+
+  p {
+    text-align : center;
+    font-size : 250%;
+  }
+
+  .text {
+    border-radius: 5px;
+    margin: auto;
+    width: 70%;
+    background-color : white;
+    padding: 35px;
+    font-size: 125%;
+    margin-bottom: 1cm
+  }
+
+.tweets {
+    margin: -80px -80px;
+    position: relative;
+    top: 70%; 
+    left: -100px;
+    height: 40px;
+    width: 130px;
+
+}
+
+#newTweets{
+  margin: -20px 50px;
+  position: absolute;
+  top: 115px;
+  right: 625px;
+}
+
+
+</style>
+  </head>
+  <body>
+    <script>
+  
+      $(document).ready(function(){ //document.ready indicates when the page is ready. When the page is ready, the anonymous function inside ready will execute
+        
+        var $body = $('body'); //a way reference the 'body' section of the html and use jquery code with it
+        $body.html(''); //how to grab html inside the body tag
+
+        var length = 0 //sets the length for the streams object. This is used later when the button is pressed. The length at that time is compared to the length here. Once that runs, this variable is set equal to that length. 
+
+        var index = streams.home.length - 1; //references data_generators file, streams.home is an array
+        function tweetBuilder(){
+        while(index >= length) { //while index is greater than prior length, index starts at length of tweets
+        var tweet = streams.home[index];  //references a specific tweet. I.e for each tweet in our home stream
+
+        var $tweet = $('<div class = "text" ></div>'); //creates an html element in jQuery
+        var link = $('<button type = "button" class= "tweets" ></button>') //change to button
+        link. text("@" + tweet.user)
+        $tweet.text( tweet.message + ' ---' + tweet.created_at); //add text to that our newly created tweet html element
+        $tweet.appendTo($body) //append $tweet html element to body, this line is what actuall gets tweets to show in web pg
+        link.prependTo($tweet);
+        index -= 1; //subtract one from index
+        }
+        length = streams.home.length
+        $(".tweets").on("click", function(event) {
+        localStorage.setItem("tweetData", JSON.stringify(streams.users)) //localStorage saves everything as a string. Just putting an object in localStorage gives you [object Object]. stringify allows you to turn the objects contents into a string, which can the be reversed using JSON.parse() to access the object again. 
+        localStorage.setItem('userID', $(this).text().slice(1));
+       //localStorage saves data that can be used anywhere in your program
+        //This selects the current item (the button being clicked), and .text() selects the text in that item, in this case the username. The username is then stored in local storage object, with key userID. The UserID object is then fetched with getItem on timeline html page.
+        window.open("timeline.html") //bro = wsers location should open timeline link. 
+        })
+        }        
+
+        tweetBuilder()
+
+
+          //https://www.twitter.com/tweet.user
+
+          var button = ('<button type="button" id = "newTweets">Click to show new tweets</button>') //create button html element
+          $(button).prependTo($body); //append the button recently created to the body
+
+          $("#newTweets").on("click", function() { //"button" references the var button we created above, .on("click", function () {what to execute when clicked})
+            if (streams.home.length > length) { //check if new tweets have been added to home_stream, see if thats longer than the last stored length
+               index = streams.home.length - 1; //references data_generators file, streams.home is an array
+              tweetBuilder()
+               }
+          })
+
+
+        var opening = $('<p>Twittler </p>')
+        opening.prependTo($body)
+
+
+
+        });
+
+
+          // Create a button that shows new tweets. The button can be built into the HTML, and acitivated with the JQuery .change() chain
+          // Show the timestamp for each of the tweets using Date.now from the regular JS library.
+          // Add a CSS sheet in the header to allow us to add basic styling.
+          // Create an object for each individual's tweets, then use an .onClick action to open the page to that users timeline. This may require a second page.  
+
+
+
+    </script>
+      </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="jquery.js"></script>
+    <script src="data_generator.js"></script>
+    <style type="text/css">
+
+  body {
+    background-color : #0084b4;
+  }
+
+  p {
+    text-align : center;
+    font-size : 250%;
+  }
+
+  .text {
+    border-radius: 5px;
+    margin: auto;
+    width: 50%;
+    background-color : white;
+    padding: 10px;
+    font-size: 125%;
+    margin-bottom: 1cm
+  }
+
+.UserTweets {
+    margin: -80px -80px;
+    position: relative;
+    top: 80%; 
+    left: 10%;
+    height: 40px;
+    width: 130px;
+
+}
+
+#return{
+  margin: -20px -50px;
+  position: absolute;
+  top: 120px;
+  left: 60px;
+}
+
+
+</style>
+
+
+  </head>
+  <body>
+
+    <script>
+   
+      $(document).ready(function(){ //document.ready indicates when the page is ready. When the page is ready, the anonymous function inside ready will execute
+        
+        var $body = $('body'); //a way reference the 'body' section of the html and use jquery code with it
+        $body.html(''); //how to grab html inside the body tag
+        var data = localStorage.getItem("userID") //gets the userID object
+        var getData= localStorage.getItem("tweetData")
+        var streams = JSON.parse(getData) //reverses JSON.stringify. Allows us the use the object that was stringified. 
+        var local = streams[data]
+        var length = local.length //sets the length for the streams object. This is used later when the button is pressed. The length at that time is compared to the length here. Once that runs, this variable is set equal to that length. 
+        var index = local.length - 1; //references data_generators file, streams.home is an array
+        while(index >= 0) { //while index is greater than prior length, index starts at length of tweets
+        var tweet = local[index];  //references a specific tweet. I.e for each tweet in our home stream
+
+        var $tweet = $('<div></div>'); //creates an html element in jQuery
+        var link = $('<button type = "button"></button>') //change to button
+        link. text('@' + tweet.user)
+        $tweet.text( tweet.message + ' ---' + tweet.created_at); //add text to that our newly created tweet html element
+        link.appendTo($body);
+        $tweet.appendTo($body) //append $tweet html element to body, this line is what actuall gets tweets to show in web pg
+        index -= 1; //subtract one from index
+        }       
+
+        var button = ('<button type="button" id = "return">Click to return</button>') //create button html element
+        $(button).prependTo($body); //append the button recently created to the TOP body
+
+        $("#return").on("click", function() { //"button" references the var button we created above, .on("click", function () {what to execute when clicked})
+          window.close()
+
+
+      });
+
+        var opening = $('<p> Viewing the timeline for user <span id ="userName"> </span> </p>')
+      opening.prependTo($body)   
+
+
+
+    });
+  
+  //Right now this code works. I don't know how to get this page to refresh new tweets, I think that's going to have to get left off.
+  //I also don't know how to make a back button, perhaps it would be beter if this window popped out???
+  //
+
+
+    </script>
+      </body>
+</html>
+
